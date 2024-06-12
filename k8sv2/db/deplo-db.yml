@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mydb-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      env: production-db
+  template:
+    metadata:
+      name: mydb-pod
+      labels:
+        env: production-db
+    spec:
+      volumes:
+        - name: mysql-vol1
+          persistentVolumeClaim:
+            claimName: ebs-mysql-pv-claim
+      containers:
+      - name: database
+        image: 114941044749.dkr.ecr.us-east-1.amazonaws.com/demomysql:latest
+        env:
+         - name: MYSQL_ROOT_PASSWORD
+           value: tecsup2023
+         - name: MYSQL_PASSWORD
+           value: tecsup2023
+         - name: MYSQL_DATABASE
+           value: shop_db
+        volumeMounts:
+          - mountPath: /var/lib/mysql
+            name: mysql-vol1      
